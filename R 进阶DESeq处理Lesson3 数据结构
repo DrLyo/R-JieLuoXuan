@@ -1,0 +1,174 @@
+# 向量
+## 自定义向量
+num_vec = c(1,3,5)  # numVec  NumVec 数值型向量 #分隔符命名
+#命名
+numVec #小驼峰
+NumVec #大驼峰
+num_vec_continue = c(10:5) #数值向量可以连续性地定义数值
+char_vec = c('a','b','c') #字符型向量
+char_vec_continue = c('a':'z') # 锛侊紒锛佹姤閿欙紒锛侊紒
+
+#连续字符型向量
+letters
+LETTERS
+
+letters[1:8] #部分字符向量
+
+logi_vec = c(T,T,F,T) #逻辑型向量
+logi_vec
+
+#一个向量只能有一种类型，当混合向量时
+mix_vec = c(1,2,'a','b') #混合向量时，数值与字符混合时，会转换成字符向量
+mix_vec = c(1,T,'a')
+mix_vec
+
+#names 函数给对象打标签
+names(mix_vec) = c('Num','Logi','Char')
+mix_vec
+
+#两个向量之间 支持直接的数字运算
+c(1,3,5)+c(2,4,6)
+c(1,3,5)+c(2,4)
+#warning 只是警告提示，上个代码还是运行的
+#Error是代码直接报错不能运行
+
+#将两个向量合并
+c(c(1,3,5),c(2,4,6))
+my_vec = c(num_vec_continue, num_vec)
+my_vec
+
+## 向量操作/切片
+### 位置切片
+my_vec[4] # 鎻愬彇绗?4涓厓绱?
+my_vec[15]
+length(my_vec) # 向量的长度
+#1) NA表示数据集中的该数据遗失、不存在。在针对具有NA的数据集进行函数操作的时候，该NA不会被直接剔除。如x<-c(1,2,3,NA,4)，取mean(x)，则结果为NA，如果想去除NA的影响，需要显式告知mean方法，如 mean(x,na.rm=T)；NA是没有自己的mode的，在vector中，它会“追随”其他数据的类型，比如刚刚的x，mode(x)为numeric，mode(x[4])亦然
+#2) NULL表示未知的状态。它不会在计算之中，如x<-c(1,2,3,NULL,4)，取mean(x)，结果为2.5。NULL是不算数的，length(c(NULL))为0，而length(c(NA))为1。可见NA“占着”位置，它存在着，而NULL没有“占着”位置，或者说，“不知道”有没有真正的数据。
+
+my_vec[-4] # 删除第四个元素
+my_vec[-15]#没有第15个元素，所以对本向量没有影响
+
+
+my_vec[1:5] # 连续提取第1到第5个元素
+
+my_vec[c(1,3,5)]  # 间隔提取元素
+
+my_vec[-1:-5] # 删除第1到第5个元素
+
+### 条件切片
+my_vec < 8 #判断是否为T
+my_vec[my_vec<8] # 提取小于8的元素
+
+### 常用函数
+seq()#函数 生成连续数据
+seq(1, 10, by=2)#by等间距，by=2，间距为2
+mean(my_vec)#mean计算均值
+max(my_vec)#max计算最大值
+
+# 矩阵
+## 自定义矩阵
+matrix(1:20, nrow=5,ncol=4)
+my_mtx = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE)#byrow 以行为单位做数字排列
+my_mtx
+## 切片
+my_mtx[1,] # 提取第一行数据
+my_mtx[,2] # 提取第二列数据
+my_mtx[1:3,] #提取1到3列的数据
+
+my_mtx[,8] # 没有第8列，矩阵不支持超出范围的提取
+
+my_mtx[-1,] #没有第一行
+my_mtx
+my_mtx[c(1,3),c(2,4)] #提取1、3行，2、4列的数字
+
+## 合并
+my_mtx2 = matrix(1:20, nrow = 5, ncol = 4)
+my_mtx2
+rbind(my_mtx, my_mtx2) # 以行的方式合并
+cbind(my_mtx, my_mtx2) # 以列的方式合并
+
+my_mtx3 = matrix(1:25, nrow = 5, ncol = 5)
+my_mtx3
+rbind(my_mtx, my_mtx3)  # 列数必须一致
+cbind(my_mtx, my_mtx3)  # 行数必须一致
+
+dim(my_mtx) # 查看行列数，返回值第一个是行，第二个是列
+nrow(my_mtx) # 查看行数 
+ncol(my_mtx) # 查看列数
+
+## 行列名
+rownames(my_mtx)
+colnames(my_mtx)
+rownames(my_mtx) = c('G1','G2','G3','G4','G5') # 自定义行名
+colnames(my_mtx) = c('S1-1','S1-2','S2-1','S2-2') # 自定义列名
+
+## 以行列名切片
+my_mtx[,'S2-1']
+my_mtx[,c('S2-1','S1-1')]
+
+# 数据框
+## 自定义数据框
+my_df = data.frame(S1=1:5,S2=c(2,8,21,4,39),
+                   S3=15:11,S4=c(20,3,4,5,6)) #默认以列为单位
+my_df
+rownames(my_df) = c('Gene1','Gene2','Gene3','Gene4','Gene5')
+
+## 切片
+### 位置切片
+my_df[1]#默认提取列的数据
+my_df[,1]
+
+my_df[1,]
+
+### 通过美元符号 调出列名
+my_df$S1
+
+my_df['S2'] #以列名提取
+
+class(my_df[1]) #数据框 
+class(my_df$S1) # 整数
+class(my_df['S1']) #数据框
+
+### 条件切片
+my_df[my_df$S1<4, ]#把S1列里所有小于4的行全提取出来
+subset(my_df, S1<4)#条件切片专用行数，#把S1列里所有小于4的行全提取出来
+
+## 常用函数
+rowMeans(my_df) #每一行的均值
+colMeans(my_df) # 案列求均值
+
+sum(my_df) #该数据框所有值都相加求和
+rowSums(my_df) # 按行求和
+colSums(my_df) # 安列求和
+
+apply(my_df, 1, max) # 每列最大值
+apply(my_df, 2, max) # 每列最小值
+
+apply(my_df, 1, min)#（数据框，列，函数）
+
+# 因子
+sex = factor(c('f','m','f','f','m'),  # 值
+             levels=c('f','m'))       # 水平
+
+sex
+
+heights = data.frame(
+  height_cm=c(156,182,170),
+  gender=c('f','m','f')     
+) # s数据框中含有字符的列为因子型
+
+heights
+
+# 数组
+my_array = array(1:24, c(2,  # 第一维度 两行
+                         3,  # 第二维度  三列
+                         4)) # 第三维度  四个矩阵
+
+
+# l列表
+my_list = list(my_vec, my_mtx, my_df, my_array)
+my_list
+names(my_list) = c('vector','matrix','dataframe','array')
+
+my_list[[1]] 
+my_list[['matrix']]
