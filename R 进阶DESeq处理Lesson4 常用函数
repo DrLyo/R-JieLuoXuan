@@ -1,0 +1,525 @@
+R语言数据处理常用函数
+向量相关函数
+is.na-判断空值
+关键词：空值
+
+ 
+is.na(x)
+    x:向量
+ 
+> test =c('Hello', 'World',NA, 1,  2, 3) 
+> is.na(test)
+[1] FALSE FALSE  TRUE FALSE FALSE FALSE
+> 
+> test[! is.na(test)] #去除test中NA值
+[1] "Hello" "World" "1"     "2"     "3" 
+union-计算并集
+关键词： 并集
+
+ 
+union(x,y)
+    x, y:向量
+ 
+> union(1:4,2:5)
+[1] 1 2 3 4 5
+> union(1:4,8:10)
+[1]  1  2  3  4  8  9 10
+Tips: union只可以处理俩个向量，那如何计算多个向量的并集呢？
+
+ 
+> union(1:4,union(2:5,8:10))
+[1]  1  2  3  4  5  8  9 10
+这个例子是想强调：函数是可以叠加的，不同函数之间也是如此
+
+intersect-计算交集
+关键词： 交集
+
+ 
+intersect(x,y)
+    x, y:向量
+ 
+> intersect(1:4,2:5)
+[1] 2 3 4
+> intersect(1:4,8:10)
+integer(0) # 表示没有并集
+Tips：先求并集，再求交集
+
+ 
+> intersect(1:4,union(2:5,8:10))
+[1] 2 3 4
+setdiff-获取左向量的特有元素
+关键词：左向量 特有 唯一
+
+ 
+setdiff(x,y)
+    x, y:向量
+ 
+> setdiff(1:4,2:5)
+[1] 1
+> setdiff(1:4,8:10)
+[1] 1 2 3 4
+seq-生成数值型向量
+关键词：序列 生成 间隔
+
+ 
+seq(from,to,by=,length.out=)
+    from:起始数值
+    to:终止数值
+    by:序列间隔,默认为1
+    length.out:将from-to区间划分为多少份，可简化为len
+ 
+> seq(1,9,by=3) # 生成1到9，以3为间隔的序列
+[1] 1 4 7
+> seq(1,9,len=4) #将1到9的序列，划分为4等份
+[1] 1.000000 3.666667 6.333333 9.000000
+sample-随机抽取向量
+关键词：随机
+
+ 
+sample(x,size,replace=FALSE)
+    x:待随机抽取的向量
+    size:抽取的次数，默认抽取length(x)次
+    replace:是否重复抽样
+ 
+> sample(1:10) # 从1:10序列中随机不放回抽取10次
+ [1]  2  9  3  4  7  1  5  6  8 10
+> sample(1:10,5) # 从1:10序列中随机不放回抽取5次
+[1] 8 2 6 4 5
+> sample(1:10,5,rep=T) # 从1:10序列中随机放回抽取5次
+[1]  2  4  8 10  5
+注意：
+
+随机抽取意味着运行两次sample(1:10，5)得到的结果不一样
+
+set.seed()可以重复随机结果
+
+请自行运行两次，每次都可以获得2 7 7 7 9
+
+ 
+set.seed(1234)
+sample(1:10,5,rep=T)
+rep-重复向量
+关键词：重复
+
+ 
+rep(x,each,times)
+    x:待重复的向量
+    each:每一个元素重复的次数
+    times:向量整体重复次数
+ 
+> rep(c(1,  2, 3),2) # 向量整体重复2次
+[1] 1 2 3 1 2 3
+> rep(c(1,  2, 3),each=2) # 向量的每一个元素依次重复2次
+[1] 1 1 2 2 3 3
+> rep(c(1,  2, 3),1:3) # 向量的每一个元素重复不同次数
+[1] 1 2 2 3 3 3
+> rep(c(1,  2, 3),each=2, times=3) #向量每一个元素重复2次，总共重复3次
+ [1] 1 1 2 2 3 3 1 1 2 2 3 3 1 1 2 2 3 3
+rev-反向排列向量
+关键词：反向 反序 逆序
+
+ 
+rev(x)
+    x:待反向排列的向量
+ 
+> rev(1:4)
+[1] 4 3 2 1
+> rev(c('a','b','c','d'))
+[1] "d" "c" "b" "a"
+table-频次统计
+关键词：频次 统计 计数
+
+ 
+table(x)
+    x:待统计向量
+ 
+> table(c(1,2,2,4,7,1,1))
+​
+1 2 4 7 
+3 2 1 1 
+排序相关函数
+sort-元素重排
+关键词：排序 重排
+
+ 
+sort(x, decreasing=FALSE)
+    x: 待重排向量
+    decreasing: 降序排列，默认FALSE
+ 
+> sort(c(4,2,1,5,8,1,4))
+[1] 1 1 2 4 4 5 8
+> sort(c(4,2,1,5,8,1,4),decreasing = T)
+[1] 8 5 4 4 2 1 1
+> sort(c('b','e','a')) # 返回重新排序后的向量
+[1] "a" "b" "e"
+order-求元素顺序
+关键词：排序 顺序
+
+ 
+order(x, decreasing=FALSE)
+    x: 待排序向量
+    decreasing: 降序排列，默认FALSE
+ 
+> order(c('b','e','a')) # 返回排序的坐标值
+[1] 3 1 2
+> order(c('b','e','a'),decreasing = T)
+[1] 2 1 3
+rank-求元素排名
+关键词：排序 排名
+
+ 
+rank(x)
+    x: 待求排名的向量
+ 
+> rank(c('b','e','a')) # 返回元素的排名
+[1] 2 3 1
+字符相关函数
+tolower-字符串小写转换
+关键词：小写
+
+ 
+tolower(x)
+    x: 待转换字符串或字符串向量
+ 
+> tolower('Hello World')
+[1] "hello world"
+toupper-字符串大写转换
+关键词：大写
+
+ 
+toupper(x)
+    x: 待转换字符串或字符串向量
+ 
+> toupper('Hello World')
+[1] "HELLO WORLD"
+sub-字符串替换
+关键词：替换 批量 正则
+
+ 
+sub(pattern, replacement, x)
+    pattern:待替换原始字符串模式
+    replacement:待替换目标字符串
+    x: 待转换字符串或字符串向量
+ 
+> sub("a","A",c("abcda","adcba")) #只替换每次字符串的第1个匹配
+[1] "Abcda" "Adcba"
+> gsub("a","A",c("abcda","adcba")) #替换所有匹配
+[1] "AbcdA" "AdcbA"
+> sub('a$', 'A', c("abcda","adcba")) #只替换位于末尾的a
+[1] "abcdA" "adcbA"
+> sub('b.*a','Box', c("abcda","adcba")) # 替换从b到a的字符
+[1] "aBox"   "adcBox"
+> sub('b.','Box', c("abcda","adcba"))  # 替换b和其后一位的字符
+[1] "aBoxda" "adcBox"
+> sub('b.+','Box', c("abcda","adcba")) # 替换从b之后的所有字符
+[1] "aBox"   "adcBox"
+> sub('l.*l','AAAA','Hello World') #贪婪匹配：匹配尽可能多的字符
+[1] "HeAAAAd"
+> sub('l.*?l','AAAA','Hello World') #懒惰匹配：匹配最短的字串
+[1] "HeAAAAo World"
+pattern参数可以结合正则表达式进行通配
+
+正则表达式语法规则：
+
+. 除了换行以外的任意字符 ^ 放在句首，表示一行字符串的起始 $ 放在句尾，表示一行字符串的结束
+
+*零个或者多个之前的字符
+
++一个或者多个之前的字符 ? 零个或者一个之前的字符
+
+更详细的资料，请参考https://blog.csdn.net/u011402596/article/details/44515089
+
+substr-字符串截取
+关键词：截取
+
+ 
+substr(x, start, stop)
+    x:待截取字符串或字符串向量
+    start:起始位置
+    stop:终止位置
+ 
+> substr('Hello World', 1, 4)
+[1] "Hell"
+strsplit-字符串切割
+关键词：切割
+
+ 
+strsplit(x, split)
+    x:待切割字符串或字符串向量
+    split:分隔符
+ 
+> strsplit("Hello World", ' ') #返回列表形式
+[[1]]
+[1] "Hello" "World"
+Tips: strsplit返回结果形式为列表，可以通过unlist函数将列表转化为向量
+
+ 
+> unlist(strsplit('Hello World', ' '))
+[1] "Hello" "World"
+paste-字符串连接
+关键词：连接
+
+ 
+paste(…,sep="",collapse=NULL)
+    ...:一个或多个R对象
+    sep:元素分隔符
+    collapse:字符串分隔符
+ 
+> paste('Hello','World',sep=', ')
+[1] "Hello, World"
+> paste('Hello','World',1, 2, 3,sep='_!_ ')
+[1] "Hello_!_ World_!_ 1_!_ 2_!_ 3"
+> paste(c('Hello','World'),c(1, 2, 3),sep=', ')
+[1] "Hello, 1" "World, 2" "Hello, 3"
+> paste(c('Hello','World'),c(1, 2, 3),sep=', ',collapse = '; ')
+[1] "Hello, 1; World, 2; Hello, 3"
+匹配相关函数
+match-整词匹配
+关键词：匹配 查询
+
+ 
+match(x,table)
+    x:待查询值
+    table:匹配模板
+ 
+> match(c('Hi', 'Wor', 2, 1, 3),c('Hello', 'World', 1, 2, 3))
+[1] NA NA  4  3  5
+Tips: match返回值为table中匹配x值的位置，没有匹配上返回NA; %in% 类似match,但是返回值为逻辑值
+
+ 
+> c('Hi', 'Wor',  2, 1, 3) %in% c('Hello', 'World', 1, 2, 3)
+[1] FALSE FALSE  TRUE  TRUE  TRUE
+grep-关键字搜索
+关键词：搜索 查询
+
+ 
+grep(pattern, x)
+    pattern:待搜索字符串模式
+    x: 待搜索字符串或字符串向量
+ 
+> grep('o',c('Hello', 'World', 1,  2, 3)) # 返回匹配上的位置
+[1] 1 2
+> grepl('o',c('Hello', 'World', 1,  2, 3)) # 返回逻辑值
+[1]  TRUE  TRUE FALSE FALSE FALSE
+Tips: match为整词匹配，grep为关键字匹配；match第一个参数可以是向量，grep第一个参数只能是字符；match不能使用正则，grep可以使用正则
+
+数据框相关函数
+na.omit-删除含有空值的行
+关键词：数据框 空值 行
+
+ 
+na.omit(df)
+    df:数据框
+ 
+> head(airquality) # airquality是R内置的示例数据集
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+5    NA      NA 14.3   56     5   5
+6    28      NA 14.9   66     5   6
+> na.omit(head(airquality))
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+apply-数据框循环
+apply相比较for循环，可以提高运算效率
+
+关键词：数据框 循环
+
+ 
+apply(X, MARGIN, FUN...)
+    X:数组、矩阵、数据框
+    MARGIN:1表示按行，2表示按列
+    FUN:调用函数
+ 
+> head(airquality) # airquality是R内置的示例数据集
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+5    NA      NA 14.3   56     5   5
+6    28      NA 14.9   66     5   6
+> apply(head(airquality), 1, mean)
+       1        2        3        4        5        6 
+51.90000 40.16667 42.60000 68.91667       NA       NA 
+> apply(head(airquality), 2, mean)
+   Ozone  Solar.R     Wind     Temp    Month      Day 
+      NA       NA 11.45000 66.16667  5.00000  3.50000 
+subset-数据框截取
+subset可以根据自定义条件截取数据框子集
+
+关键词：数据框 截取 子集
+
+ 
+subset(x,...,select)
+    x: 数据框
+    ...: 条件选择，主要针对行操作
+    select: 条件选择，主要针对列操作
+ 
+> head(airquality) # airquality是R内置的示例数据集
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+5    NA      NA 14.3   56     5   5
+6    28      NA 14.9   66     5   6
+> head(subset(airquality,Temp > 80, select = c(Ozone,Temp))) #选择 Temp>80的行，并且只展示Ozone和Temp列
+   Ozone Temp
+29    45   81
+35    NA   84
+36    NA   85
+38    29   82
+39    NA   87
+40    71   90
+> head(subset(airquality, Day == 1, select = -Temp)) #选择Day=1的行，并且删除Temp列
+    Ozone Solar.R Wind Month Day
+1      41     190  7.4     5   1
+32     NA     286  8.6     6   1
+62    135     269  4.1     7   1
+93     39      83  6.9     8   1
+124    96     167  6.9     9   1
+split-数据框拆分
+split可以根据某一列（因子型）将数据框拆分为不同子集
+
+关键词： 数据框 拆分 子集 因子
+
+ 
+split(x, f)
+    x: 数据框
+    f: 因子型列表
+ 
+> head(iris) # iris为R内置
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+4          4.6         3.1          1.5         0.2  setosa
+5          5.0         3.6          1.4         0.2  setosa
+6          5.4         3.9          1.7         0.4  setosa
+> class(iris$Species) # Species列为因子型
+[1] "factor"
+> levels(iris$Species) # 查看Species的类别
+[1] "setosa"     "versicolor" "virginica"
+> class(split(iris,iris$Species)) # 拆分后的数据类型为列表
+[1] "list"
+> names(split(iris,iris$Species)) # 拆分后的列表名称
+[1] "setosa"     "versicolor" "virginica" 
+> head(split(iris,iris$Species)[['versicolor']]) # 查看拆分后的versicolor子集
+   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+51          7.0         3.2          4.7         1.4 versicolor
+52          6.4         3.2          4.5         1.5 versicolor
+53          6.9         3.1          4.9         1.5 versicolor
+54          5.5         2.3          4.0         1.3 versicolor
+55          6.5         2.8          4.6         1.5 versicolor
+56          5.7         2.8          4.5         1.3 versicolor
+merge-数据框合并
+merge可以根据列名合并两个不同的数据框
+
+merge可能是大多数人需求度最高的一个函数
+
+ 
+merge(x, y, by = intersect(names(x), names(y)),
+      by.x = by, by.y = by, all = FALSE, all.x = all, all.y = all)
+    x: 数据框
+    y: 数据框
+    by: 指定合并依据列，默认根据数据框列名自行判断
+    all: 指定输出方式，默认仅输出非空行
+自定义数据框
+
+ 
+> df1 = data.frame(CustomerId = c(1:6), Product = c(rep("Toaster", 3), rep("Radio", 3)), Taste=c(rep("Sweet", 3), rep("bitter", 3))); df1
+  CustomerId Product  Taste
+1          1 Toaster  Sweet
+2          2 Toaster  Sweet
+3          3 Toaster  Sweet
+4          4   Radio bitter
+5          5   Radio bitter
+6          6   Radio bitter
+> df2 = data.frame(CustomerId = c(2, 4, 7), State = c(rep("Alabama", 2), rep("Ohio", 1)), Flavour=c(rep("Sweet", 3), rep("bitter", 3))); df2
+  CustomerId   State Flavour
+1          2 Alabama   Sweet
+2          4 Alabama   Sweet
+3          7    Ohio   Sweet
+4          2 Alabama  bitter
+5          4 Alabama  bitter
+6          7    Ohio  bitter
+> df3 = data.frame(CustomerId = c(1, 4, 7), Product = c("Toaster","Alabama", "Ohio")); df3
+  CustomerId Product
+1          1 Toaster
+2          4 Alabama
+3          7    Ohio
+ 
+> merge(x=df1, y=df2) #默认根据df1、df2相同列CustomerID进行合并
+  CustomerId Product  Taste   State Flavour
+1          2 Toaster  Sweet Alabama   Sweet
+2          2 Toaster  Sweet Alabama  bitter
+3          4   Radio bitter Alabama   Sweet
+4          4   Radio bitter Alabama  bitter
+> merge(x=df1, y=df3) #默认根据df1、df3相同列CustomerID、Product进行合并
+  CustomerId Product Taste
+1          1 Toaster Sweet
+> merge(df1, df3, by="CustomerId") #指定根据df1、df3相同列CustomerID进行合并
+  CustomerId Product.x  Taste Product.y
+1          1   Toaster  Sweet   Toaster
+2          4     Radio bitter   Alabama
+> head(merge(df1, df2, by.x="Taste", by.y="Flavour")) #指定根据df1的Taste列、df2的Flavour列进行合并
+   Taste CustomerId.x Product CustomerId.y   State
+1 bitter            4   Radio            2 Alabama
+2 bitter            4   Radio            4 Alabama
+3 bitter            4   Radio            7    Ohio
+4 bitter            5   Radio            2 Alabama
+5 bitter            5   Radio            4 Alabama
+6 bitter            5   Radio            7    Ohio
+> merge(x=df1, y=df3, by="CustomerId", all=T) #指定根据df1、df3相同列CustomerID进行合并，输出所有内容
+  CustomerId Product.x  Taste Product.y
+1          1   Toaster  Sweet   Toaster
+2          2   Toaster  Sweet      <NA>
+3          3   Toaster  Sweet      <NA>
+4          4     Radio bitter   Alabama
+5          5     Radio bitter      <NA>
+6          6     Radio bitter      <NA>
+7          7      <NA>   <NA>      Ohio
+> merge(x=df1, y=df3, by="CustomerId", all.x =T) #指定根据df1、df3相同列CustomerID进行合并，输出df1所有内容
+  CustomerId Product.x  Taste Product.y
+1          1   Toaster  Sweet   Toaster
+2          2   Toaster  Sweet      <NA>
+3          3   Toaster  Sweet      <NA>
+4          4     Radio bitter   Alabama
+5          5     Radio bitter      <NA>
+6          6     Radio bitter      <NA>
+> merge(x=df1, y=df3, by="CustomerId", all.y = T) #指定根据df1、df3相同列CustomerID进行合并，输出df3所有内容
+  CustomerId Product.x  Taste Product.y
+1          1   Toaster  Sweet   Toaster
+2          4     Radio bitter   Alabama
+3          7      <NA>   <NA>      Ohio
+Tips：
+
+is.na也可以判断数据框空值
+
+ 
+> is.na(merge(x=df1, y=df3, by="CustomerId", all.y = T))
+     CustomerId Product.x Taste Product.y
+[1,]      FALSE     FALSE FALSE     FALSE
+[2,]      FALSE     FALSE FALSE     FALSE
+[3,]      FALSE      TRUE  TRUE     FALSE
+complete.cases可以判断数据框某一列是否全部为非空值
+
+ 
+> complete.cases(merge(x=df1, y=df3, by="CustomerId", all.y = T))
+[1]  TRUE  TRUE FALSE
+na.omit可以删除空行
+
+ 
+> na.omit(merge(x=df1, y=df3, by="CustomerId", all.y = T))
+  CustomerId Product.x  Taste Product.y
+1          1   Toaster  Sweet   Toaster
+2          4     Radio bitter   Alabama
+ 
+
+ 
